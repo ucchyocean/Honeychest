@@ -83,8 +83,6 @@ public class ContainerAccessManager {
 
 		// 各時点でのインベントリを取得
 		HashMap<String, Integer> after = InventoryUtil.compressInventory(InventoryUtil.getContainerContents(access.container));
-		// String diff = InventoryUtil.createDifferenceString(access.beforeInv, after);
-		// String readble = InventoryUtil.createChangeString(InventoryUtil.interpretDifferenceString(diff));
 
 		boolean kicked = false;
 		// ハニーチェストか判定
@@ -105,6 +103,13 @@ public class ContainerAccessManager {
 				// ログ、通知用の窃盗アイテム文字列
 				String substr = InventoryUtil.createSubString(InventoryUtil.interpretSubString(InventoryUtil.joinListToString(stealList)));
 
+				// メッセージをブロードキャスト
+				Actions.broadcastMessage("&c[Honeychest]&f "+ MessageManager.getString("Broadcast.alert", player.getName()));
+				// 盗んだアイテムをキャストするかどうか
+				if (config.getBroadcastItems()){
+					Actions.broadcastMessage("&c[Honeychest]&f "+ MessageManager.getString("Broadcast.items", substr));
+				}
+
 				// 設定ファイル確認してアクションを行う
 				switch (config.getTakeAction()){
 					case KICK:
@@ -122,16 +127,11 @@ public class ContainerAccessManager {
 							break;
 						}
 						for (String cmd : cmds){
-							Actions.executeCommandOnConsole(cmd.replace("!player!", player.getName()));
+							Actions.executeCommandOnConsole(cmd
+									.replace("!player!", player.getName())
+									.replace("!location!", locstr));
 						}
 						break;
-				}
-
-				// メッセージをブロードキャスト
-				Actions.broadcastMessage("&c[Honeychest]&f "+ MessageManager.getString("Broadcast.alert", player.getName()));
-				// 盗んだアイテムをキャストするかどうか
-				if (config.getBroadcastItems()){
-					Actions.broadcastMessage(MessageManager.getString("Broadcast.items", substr));
 				}
 
 				// インベントリをロールバック

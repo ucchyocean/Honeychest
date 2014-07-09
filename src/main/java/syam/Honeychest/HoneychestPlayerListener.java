@@ -12,12 +12,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 
 import syam.Honeychest.ContainerAccessManager.ContainerAccess;
 import syam.Honeychest.config.MessageManager;
@@ -141,34 +138,43 @@ public class HoneychestPlayerListener implements Listener {
 		}
 	}
 
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onInventoryClose(InventoryCloseEvent event){
+		if ( !(event.getPlayer() instanceof Player) ) {
+			return;
+		}
+		// Honeychestのインベントリが閉じられたかチェック
+		Honeychest.containerManager.checkInventoryClose((Player)event.getPlayer());
+	}
+
 	/* 他のイベントでコンテナインベントリが閉じられていないかチェックする */
 
-	// チャット
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onPlayerChat(AsyncPlayerChatEvent event){
-		// インベントリが閉じられたかチェック
-		Honeychest.containerManager.checkInventoryClose(event.getPlayer());
-	}
-
-	// コマンド
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event){
-		// インベントリが閉じられたかチェック
-		Honeychest.containerManager.checkInventoryClose(event.getPlayer());
-	}
-
-	// テレポート
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onPlayerTeleport(PlayerTeleportEvent event) {
-		// インベントリが閉じられたかチェック
-		Honeychest.containerManager.checkInventoryClose(event.getPlayer());
-	}
-
-	// 切断
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onPlayerQuit(PlayerQuitEvent event) {
-		// アクセスリストから削除
-		Honeychest.containerManager.checkInventoryClose(event.getPlayer());
-		//Honeychest.containerManager.removeAccessList(event.getPlayer());
-	}
+//	// チャット
+//	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+//	public void onPlayerChat(AsyncPlayerChatEvent event){
+//		// インベントリが閉じられたかチェック
+//		Honeychest.containerManager.checkInventoryClose(event.getPlayer());
+//	}
+//
+//	// コマンド
+//	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+//	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event){
+//		// インベントリが閉じられたかチェック
+//		Honeychest.containerManager.checkInventoryClose(event.getPlayer());
+//	}
+//
+//	// テレポート
+//	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+//	public void onPlayerTeleport(PlayerTeleportEvent event) {
+//		// インベントリが閉じられたかチェック
+//		Honeychest.containerManager.checkInventoryClose(event.getPlayer());
+//	}
+//
+//	// 切断
+//	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+//	public void onPlayerQuit(PlayerQuitEvent event) {
+//		// アクセスリストから削除
+//		Honeychest.containerManager.checkInventoryClose(event.getPlayer());
+//		//Honeychest.containerManager.removeAccessList(event.getPlayer());
+//	}
 }
