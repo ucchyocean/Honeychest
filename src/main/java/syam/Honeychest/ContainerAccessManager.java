@@ -11,6 +11,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import syam.Honeychest.config.ConfigurationManager;
 import syam.Honeychest.config.MessageManager;
@@ -31,6 +32,10 @@ public class ContainerAccessManager {
 
 	// コンテナへのアクセスリスト コンテナインベントリを開いているプレイヤーがここに入る
 	private final List<ContainerAccess> accessList = new ArrayList<ContainerAccess>();
+
+	// プレイヤー名とアラーム音のマップ
+	private final HashMap<String, BukkitRunnable> alermMap =
+			new HashMap<String, BukkitRunnable>();
 
 	/**
 	 * 開いているプレイヤーインベントリとコンテナインベントリの現在の内容を格納
@@ -64,6 +69,11 @@ public class ContainerAccessManager {
 						InventoryUtil.compressInventory(InventoryUtil.getContainerContents(container)),
 						block.getLocation(),
 						large ));
+
+		// 警告音開始
+		if ( config.isAlertSound() && !player.hasPermission("honeychest.ignore") ) {
+			alermMap.put(player.getName(), Honeychest.getInstance().playAlertSound(player));
+		}
 	}
 
 	/**
@@ -73,6 +83,12 @@ public class ContainerAccessManager {
 	public boolean checkInventoryClose(Player player) {
 		// アクセスリストを取得
 		ContainerAccess access = getAccess(player);
+
+		// 警告音を鳴らしていたなら終了
+		if ( alermMap.containsKey(player.getName()) ) {
+			alermMap.get(player.getName()).cancel();
+			alermMap.remove(player.getName());
+		}
 
 		// アクセスリスト(インベントリを開いた記録)がなければ返す
 		if (access == null) return false;

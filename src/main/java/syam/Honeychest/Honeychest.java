@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import syam.Honeychest.bans.BanHandler;
 import syam.Honeychest.config.ConfigurationManager;
@@ -172,6 +175,26 @@ public class Honeychest extends JavaPlugin{
 	 */
 	public BanHandler getBansHandler(){
 		return banHandler;
+	}
+
+	/**
+	 * 対象のプレイヤーに警告音を流しつづける
+	 * @param player プレイヤー
+	 * @return 警告音を発生するタスク
+	 */
+	public BukkitRunnable playAlertSound(final Player player) {
+		BukkitRunnable task =
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					if ( !player.isOnline() ) {
+						cancel();
+					}
+					player.playSound(player.getLocation(), Sound.NOTE_PLING, 2, 2);
+				}
+			};
+		task.runTaskTimer(this, 10, 10);
+		return task;
 	}
 
 	/**

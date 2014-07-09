@@ -121,7 +121,7 @@ public class ConfigurationManager {
 
 	public boolean isGlobalBan(){
 		//return conf.getBoolean("globalBan", false);
-		return false; // Temporary disabled globalBan feature.
+		return false; // TODO: Temporary disabled globalBan feature.
 	}
 
 	public List<String> getCommands(){
@@ -138,6 +138,10 @@ public class ConfigurationManager {
 
 	public boolean getRemoveDroppedFlag(){
 		return conf.getBoolean("removeDropped", false);
+	}
+
+	public boolean isAlertSound() {
+		return conf.getBoolean("alertSound", true);
 	}
 
 	/* Logging Config */

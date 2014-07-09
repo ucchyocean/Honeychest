@@ -24,6 +24,9 @@ rollback: true
 # Remove dropped items when player opening honeychest
 removeDropped: false
 
+# Play alert sound when player opening honeychest
+alertSound: true
+
 #====================#
 #   Logging Config   #
 #====================#
