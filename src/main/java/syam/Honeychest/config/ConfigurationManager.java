@@ -120,7 +120,8 @@ public class ConfigurationManager {
 	}
 
 	public boolean isGlobalBan(){
-		return conf.getBoolean("globalBan", false);
+		//return conf.getBoolean("globalBan", false);
+		return false; // Temporary disabled globalBan feature.
 	}
 
 	public List<String> getCommands(){
